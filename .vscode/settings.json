@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "**/*.d": true,
+    "**/*.o": true,
+    "**/node_modules": true,
+    "**/dist": true
+  },
+  "files.associations": {
+    "array": "c",
+    "string": "c",
+    "string_view": "c"
+  }
+}

@@ -1,7 +1,6 @@
 #include <string.h>
 
-#include "protocol.h"
-#include "mcom_util.h"
+#include "mcom.h"
 
 static const char *TAG = "bs";
 

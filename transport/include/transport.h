@@ -15,9 +15,8 @@
 #endif
 
 typedef struct Transport_t {
-  int (*connect)(Transport_t *transport);
-  int (*transmit)(Transport_t *transport, Buf_t *buf);
-  int (*receive)(Transport_t *transport, Buf_t *buf);
+  int (*transmit)(struct Transport_t *transport, Buf_t *buf);
+  int (*receive)(struct Transport_t *transport, Buf_t *buf);
 
   void *ctx;
   Buf_t *buf;
@@ -30,7 +29,6 @@ extern "C" {
 #endif
 
 Transport_t *transport_init(
-  int (*connect)(Transport_t *transport),
   int (*transmit)(Transport_t *transport, Buf_t *buf),
   int (*receive)(Transport_t *transport, Buf_t *buf),
   void *ctx, uint32_t bufsize

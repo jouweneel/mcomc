@@ -26,7 +26,7 @@ void init() {
 }
 
 void loge(const char *tag, const char* fmt, ...) {
-  printf(RED "%10lu [%s] ERROR: ", get_time(), tag);
+  printf(RED "%10llu [%s] ERROR: ", get_time(), tag);
   va_list argp;
   va_start(argp, fmt);
   vfprintf(stdout, fmt, argp);
@@ -34,7 +34,7 @@ void loge(const char *tag, const char* fmt, ...) {
 }
 
 void logi(const char *tag, const char* fmt, ...) {
-  printf(GRN "%10lu [%s]: " RESET, get_time(), tag);
+  printf(GRN "%10llu [%s]: " RESET, get_time(), tag);
   va_list argp;
   va_start(argp, fmt);
   vfprintf(stdout, fmt, argp);
@@ -42,7 +42,7 @@ void logi(const char *tag, const char* fmt, ...) {
 }
 
 void logw(const char *tag, const char* fmt, ...) {
-  printf(YEL "%10lu [%s] WARNING: " RESET, get_time(), tag);
+  printf(YEL "%10llu [%s] WARNING: " RESET, get_time(), tag);
   va_list argp;
   va_start(argp, fmt);
   vfprintf(stdout, fmt, argp);

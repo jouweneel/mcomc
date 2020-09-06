@@ -21,13 +21,6 @@ static int udp_receive(Transport_t *transport, Buf_t *buf) {
   return res;
 }
 
-int udp_connect(Transport_t *transport) {
-  TransportUdpCtx_t *udp = (TransportUdpCtx_t *)(transport->ctx);
-
-  socklen_t addr_size = sizeof(struct sockaddr_in);
-  return bind(udp->sock, (struct sockaddr *)(udp->host), addr_size);
-}
-
 Transport_t *transport_udp(void *config) {
   TransportUdpCfg_t *cfg = (TransportUdpCfg_t *)config;
 
@@ -64,7 +57,7 @@ Transport_t *transport_udp(void *config) {
 
   res |= bind(sock, (struct sockaddr *)host, addr_size);
 
-  return transport_init(udp_connect, udp_transmit, udp_receive, (void *)ctx, cfg->bufsize);
+  return transport_init(udp_transmit, udp_receive, (void *)ctx, cfg->bufsize);
 }
 
 void transport_udp_target(Transport_t *transport, const char *ip, in_port_t port) {

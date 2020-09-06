@@ -1,4 +1,5 @@
 #include "mcom.h"
+#include "mcom_state.h"
 #include "transport_udp.h"
 
 static const char *TAG = "test";
@@ -19,28 +20,31 @@ int16_t int16 = -4000;
 
 TransportUdpCfg_t udp_cfg = { .port = 3333, .bufsize = 1500 };
 
+void cmd0_handler(McomMsg_t *msg) {
+  uint8_t *data = msg->data;
+  logi(TAG, "handler 0: [%u, %u, %u]\n", data[0], data[1], data[2]);
+  data[0] = 10;
+}
+void cmd1_handler(McomMsg_t *msg) {
+  int16_t *data = (int16_t *)msg->data;
+  logi(TAG, "handler 1: [%i, %i]\n", data[0], data[1]);
+}
+
 int main() {
   init();
-  Mcom_t *mcom_udp = MCom(&protocol_bs, transport_udp, (void *)(&udp_cfg));
+  Mcom_t *mcom_udp = Mcom(&protocol_bs, transport_udp, (void *)(&udp_cfg));
   transport_udp_target(mcom_udp->transport, "127.0.0.1", 2222);
+
+  Mcom_add_handler("cmd0", DATA_TYPE_HSV, 1, MCOM_RW, cmd0_handler);
+  Mcom_add_handler("cmd1", DATA_TYPE_I16_A, 2, MCOM_RW, cmd1_handler);
 
   McomMsgs_t transmitData = { .len = 2, .msgs = msg };
   McomMsgs_t *receiveData = NULL;
   msg[1].data = (uint8_t *)(&int16);
 
-  while(1) {
-    MCom_transmit(mcom_udp, &transmitData);
-    receiveData = MCom_receive(mcom_udp);
+  Mcom_transmit(mcom_udp, &transmitData);
 
-    if (receiveData != NULL) {
-      for (uint8_t i = 0; i < receiveData->len; i++) {
-        McomMsg_t msg = receiveData->msgs[i];
-        logi(TAG, "cmd: %u, type: %x, length: %u, data: [ ", msg.cmd, msg.type, msg.length);
-        for (uint32_t j = 0; j < msg.length; j++) {
-          printf("%x ", msg.data[j]);
-        }
-        printf("]\n");
-      }
-    }
+  while(1) {
+    Mcom_handle(mcom_udp, Mcom_receive(mcom_udp));
   }
 }

@@ -1,11 +1,17 @@
 #include "mcom_state.h"
 #include "mcom_util.h"
 
+#include "esp_log.h"
+
 static const char *TAG = "[mcom_state]";
 
 static uint8_t state_cmd = 0;
 static State_t *states = NULL;
 static State_t *current_state = NULL;
+static McomMsgs_t transmit = {
+  .len = 1,
+  .msgs = NULL
+};
 
 State_t *get_state(uint8_t cmd) {
   State_t *state = states;
@@ -40,6 +46,7 @@ void Mcom_handle(Mcom_t *mcom, McomMsgs_t *msgs) {
     free(msg->data);
   }
 
+  free(msgs->msgs);
   free(msgs);
 }
 
@@ -80,4 +87,10 @@ State_t *Mcom_add_handler(
   state_cmd++;
 
   return state;
+}
+
+void Mcom_update_state(Mcom_t *mcom, State_t *state, uint8_t *value) {
+  memcpy(state->data->data, value, state->data_bytes);
+  transmit.msgs = state->data;
+  Mcom_transmit(mcom, &transmit);
 }

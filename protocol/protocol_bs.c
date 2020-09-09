@@ -13,7 +13,7 @@ McomMsgs_t *bs_decode(Buf_t *buf) {
 
   while (ptr < buf->size) {
     nr_msgs++;
-    msgs = (McomMsg_t *)realloc(msgs, sizeof(McomMsg_t) * nr_msgs);
+    msgs = (msgs == NULL) ? (McomMsg_t *)malloc(sizeof(McomMsg_t) * nr_msgs) : (McomMsg_t *)realloc(msgs, sizeof(McomMsg_t) * nr_msgs);
     McomMsg_t *msg = &(msgs[nr_msgs - 1]);
 
     msg->cmd = data[ptr];
@@ -33,7 +33,7 @@ McomMsgs_t *bs_decode(Buf_t *buf) {
     ptr += (header_size + data_size);
   }
 
-  McomMsgs_t *output = (McomMsgs_t *)malloc(sizeof(McomMsgs_t *));
+  McomMsgs_t *output = (McomMsgs_t *)malloc(sizeof(McomMsgs_t));
   output->len = nr_msgs;
   output->msgs = msgs;
 
@@ -53,7 +53,7 @@ Buf_t *bs_encode(McomMsgs_t *msgs) {
     uint8_t header_size = is_array ? 4 : 2;
     uint16_t data_size = is_array ? (unit_size * msg->length) : unit_size;
 
-    outbuf = (uint8_t *)realloc(outbuf, header_size + data_size);
+    outbuf = (i == 0) ? (uint8_t *)malloc(header_size + data_size) : (uint8_t *)realloc(outbuf, header_size + data_size);
     outbuf[ptr] = msg->cmd;
     outbuf[ptr + 1] = msg->type;
 

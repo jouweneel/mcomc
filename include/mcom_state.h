@@ -3,7 +3,7 @@
 
 #include "mcom.h"
 
-typedef enum Direction_t { MCOM_RO, MCOM_RW, MCOM_WO } Direction_t;
+typedef enum Direction_t { MCOM_RO, MCOM_RW } Direction_t;
 
 typedef struct State_t {
   McomMsg_t *data;
@@ -29,6 +29,7 @@ State_t *Mcom_add_handler(
 );
 
 void Mcom_handle(Mcom_t *mcom, McomMsgs_t *msgs);
+void Mcom_update_state(Mcom_t *mcom, State_t *state, uint8_t *value);
 
 #ifdef __cplusplus
 }

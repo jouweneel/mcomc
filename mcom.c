@@ -1,4 +1,7 @@
+#include "esp_log.h"
 #include "mcom.h"
+
+static const char *TAG = '[mcom]';
 
 Mcom_t *Mcom(Protocol_t *protocol, TransportFn_t transport_fn, void *cfg) {
   Mcom_t *mcom = (Mcom_t *)malloc(sizeof(Mcom_t));
@@ -17,6 +20,6 @@ uint32_t Mcom_transmit(Mcom_t *mcom, McomMsgs_t *msgs) {
 }
 
 McomMsgs_t *Mcom_receive(Mcom_t *mcom) {
-  mcom->transport->receive(mcom->transport, mcom->transport->buf);
+  int res = mcom->transport->receive(mcom->transport, mcom->transport->buf);
   return mcom->protocol->decode(mcom->transport->buf);
 }

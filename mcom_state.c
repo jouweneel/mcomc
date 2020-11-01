@@ -8,15 +8,11 @@ static const char *TAG = "[mcom_state]";
 static uint8_t state_cmd = 0;
 static State_t *states = NULL;
 static State_t *current_state = NULL;
-static McomMsgs_t transmit = {
-  .len = 1,
-  .msgs = NULL
-};
 
 State_t *get_state(uint8_t cmd) {
   State_t *state = states;
 
-  while (state->data->cmd != cmd) {
+  while (state->msg->cmd != cmd) {
     if (state->next == NULL) {
       return NULL;
     }
@@ -26,28 +22,17 @@ State_t *get_state(uint8_t cmd) {
   return state;
 }
 
-void Mcom_handle(Mcom_t *mcom, McomMsgs_t *msgs) {
-  for (uint32_t i = 0; i < msgs->len; i++) {
-    McomMsg_t *msg = &(msgs->msgs[i]);
-
-    State_t *state = get_state(msg->cmd);
-    if (state != NULL) {
-      state->handler(msg);
-      memcpy(state->data->data, msg->data, state->data_bytes);
-    } else {
-      loge(TAG, "No state handler for cmd %u\n", msg->cmd);
-    }
+void Mcom_handle(Mcom_t *mcom, McomMsg_t *msg) {
+  State_t *state = get_state(msg->cmd);
+  if (state != NULL) {
+    state->handler(msg);
+    memcpy(state->msg->data, msg->data, state->data_bytes);
+  } else {
+    loge(TAG, "No state handler for cmd %u\n", msg->cmd);
   }
 
-  Mcom_transmit(mcom, msgs);
-
-  for (uint32_t i = 0; i < msgs->len; i++) {
-    McomMsg_t *msg = &(msgs->msgs[i]);
-    free(msg->data);
-  }
-
-  free(msgs->msgs);
-  free(msgs);
+  Mcom_transmit(mcom, msg);
+  free(msg->data);
 }
 
 State_t *Mcom_add_handler(
@@ -63,14 +48,14 @@ State_t *Mcom_add_handler(
 
   uint8_t *data_buf = (uint8_t *)malloc(data_bytes);
 
-  McomMsg_t *data = (McomMsg_t *)malloc(sizeof(McomMsg_t));
-  data->cmd = state_cmd;
-  data->type = type;
-  data->length = length;
-  data->data = data_buf;
+  McomMsg_t *msg = (McomMsg_t *)malloc(sizeof(McomMsg_t));
+  msg->cmd = state_cmd;
+  msg->type = type;
+  msg->length = length;
+  msg->data = data_buf;
 
   State_t *state = (State_t *)malloc(sizeof(State_t));
-  state->data = data;
+  state->msg = msg;
   state->data_bytes = data_bytes;
   state->label = label;
   state->direction = direction;
@@ -90,7 +75,6 @@ State_t *Mcom_add_handler(
 }
 
 void Mcom_update_state(Mcom_t *mcom, State_t *state, uint8_t *value) {
-  memcpy(state->data->data, value, state->data_bytes);
-  transmit.msgs = state->data;
-  Mcom_transmit(mcom, &transmit);
+  memcpy(state->msg->data, value, state->data_bytes);
+  Mcom_transmit(mcom, state->msg);
 }

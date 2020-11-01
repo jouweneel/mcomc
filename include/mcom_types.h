@@ -67,7 +67,6 @@ typedef enum DataType_t {
   DATA_TYPE_DOUBLE_A = 0x8b
 } DataType_t;
 
-
 typedef struct McomMsg_t {
   uint8_t cmd;
   uint8_t type;
@@ -75,13 +74,8 @@ typedef struct McomMsg_t {
   uint8_t *data;
 } McomMsg_t;
 
-typedef struct McomMsgs_t {
-  uint8_t len;
-  McomMsg_t *msgs;
-} McomMsgs_t;
-
-typedef McomMsgs_t *(* DecodeFn_t)(Buf_t *buf);
-typedef Buf_t *(* EncodeFn_t)(McomMsgs_t *msgs);
+typedef McomMsg_t *(* DecodeFn_t)(Buf_t *buf);
+typedef Buf_t *(* EncodeFn_t)(McomMsg_t *msgs);
 
 typedef struct Protocol_t {
   DecodeFn_t decode;

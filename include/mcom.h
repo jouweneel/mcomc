@@ -17,8 +17,8 @@ extern "C" {
 #endif
 
 Mcom_t *Mcom(Protocol_t *protocol, TransportFn_t transport_fn, void *cfg);
-uint32_t Mcom_transmit(Mcom_t *mcom, McomMsgs_t *msgs);
-McomMsgs_t *Mcom_receive(Mcom_t *mcom);
+uint32_t Mcom_transmit(Mcom_t *mcom, McomMsg_t *msgs);
+McomMsg_t *Mcom_receive(Mcom_t *mcom);
 
 #ifdef __cplusplus
 }

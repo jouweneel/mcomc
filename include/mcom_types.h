@@ -75,7 +75,7 @@ typedef struct McomMsg_t {
 } McomMsg_t;
 
 typedef McomMsg_t *(* DecodeFn_t)(Buf_t *buf);
-typedef Buf_t *(* EncodeFn_t)(McomMsg_t *msgs);
+typedef Buf_t *(* EncodeFn_t)(McomMsg_t *msg);
 
 typedef struct Protocol_t {
   DecodeFn_t decode;

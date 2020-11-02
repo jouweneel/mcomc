@@ -2,8 +2,6 @@
 
 #include "mcom.h"
 
-static const char *TAG = "bs";
-
 McomMsg_t *bs_decode(Buf_t *buf) {
   uint8_t *data = buf->data;
 

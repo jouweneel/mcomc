@@ -13,7 +13,7 @@ McomMsg_t *bs_decode(Buf_t *buf) {
   uint8_t is_array = (msg->type & 0x08) == 0x08;
   uint8_t unit_size = (msg->type & 0xf0) >> 4;
 
-  uint16_t length = is_array ? ((uint16_t *)data)[2] : 1;
+  uint16_t length = is_array ? ((uint16_t *)data)[1] : 1;
   uint8_t header_size = is_array ? 4 : 2;
   uint32_t data_size = unit_size * length;
 

@@ -46,25 +46,23 @@ typedef enum DataType_t {
   DATA_TYPE_U32 = 0x40,
   DATA_TYPE_I32 = 0x41,
   DATA_TYPE_FLOAT = 0x42,
-  DATA_TYPE_RGBW = 0x43,
+  DATA_TYPE_TIMESTAMP = 0x43,
 
 /** 4-byte array types */
   DATA_TYPE_U32_A = 0x48,
   DATA_TYPE_I32_A = 0x49,
   DATA_TYPE_FLOAT_A = 0x4a,
-  DATA_TYPE_RGBW_A = 0x4b,
+  DATA_TYPE_TIMESTAMP_A = 0x4b,
 
 /** 8-byte types */
   DATA_TYPE_U64 = 0x80,
   DATA_TYPE_I64 = 0x81,
-  DATA_TYPE_TIMESTAMP = 0x82,
-  DATA_TYPE_DOUBLE = 0x83,
+  DATA_TYPE_DOUBLE = 0x82,
 
 /** 8-byte array types */
   DATA_TYPE_U64_A = 0x88,
   DATA_TYPE_I64_A = 0x89,
-  DATA_TYPE_TIMESTAMP_A = 0x8a,
-  DATA_TYPE_DOUBLE_A = 0x8b
+  DATA_TYPE_DOUBLE_A = 0x8a
 } DataType_t;
 
 typedef struct McomMsg_t {
